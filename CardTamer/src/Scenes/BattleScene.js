@@ -118,9 +118,9 @@ class BattleScene extends Phaser.Scene {
     createActiveSlots() {
         this.playerSlot = this.add.zone(
             CONFIG.scene.width * 0.25,
-            CONFIG.scene.height * 0.25, 
+            CONFIG.scene.height * 0.35, 
             200, 320
-        ).setRectangleDropZone(160, 220);
+        ).setRectangleDropZone(200, 320);
     }
 
     createCatchButton() {
@@ -292,7 +292,7 @@ class BattleScene extends Phaser.Scene {
         card.x = CONFIG.scene.width * 0.25;
         card.y = CONFIG.scene.height * 0.35;
         card.startX = CONFIG.scene.width * 0.25;
-        card.startY = CONFIG.scene.height * 0.5;
+        card.startY = CONFIG.scene.height * 0.35;
 
         card.setActiveState();
         card.setMoveButtonCallback((moveID, btn) => {
