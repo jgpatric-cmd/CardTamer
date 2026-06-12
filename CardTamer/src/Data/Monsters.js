@@ -21,7 +21,7 @@ const MONSTERS = {
         moves: ["bitePetal", "thornShot"]
     },
     ucsc: {
-        name: "Ultra Creepy Snail Coiler",
+        name: "U.C.S.C",
         health: 65,
         speed: 2,
         sprite: "Ultra Creepy Snail Coiler",
