@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardTamer</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+
+    <script src="./lib/phaser.js"></script>
+
+    <!-- Config -->
+     <script src="./src/Config.js"></script>
+
+    <!-- Data -->
+     <script src="./src/Data/EnemyDecks.js"></script>
+    <script src="./src/Data/PlayerState.js"></script>
+    <script src="./src/Data/Monsters.js"></script>
+    <script src="./src/Data/Moves.js"></script>
+
+    <!-- Machines -->
+    <script src="./src/Machines/MonsterMachine.js"></script>
+
+    <!-- Prefabs -->
+    <script src="./src/Prefabs/Card.js"></script>
+    <script src="./src/Prefabs/MonsterCard.js"></script>>
+
+    <!-- Scenes -->
+    <script src="./src/Scenes/BattleScene.js"></script>
+    <script src="./src/Scenes/MenuScene.js"></script>
+
+    <!-- Main -->
+    <script src="./src/main.js"></script>
+
+</head>
+<body>
+    <div id="phaser-game"></div>
+</body>
+</html>
