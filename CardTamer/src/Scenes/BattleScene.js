@@ -207,6 +207,10 @@ class BattleScene extends Phaser.Scene {
         const y = CONFIG.scene.height * 0.80;
 
         const card = new MonsterCard(this, x, y, monster);
+
+        card.startX = x;
+        card.startY = y;
+
         this.playerCardMap.set(monster, card);
         this.handCards.push(card);
 
@@ -217,11 +221,18 @@ class BattleScene extends Phaser.Scene {
     removeCardFromHand(card) {
         this.handCards = this.handCards.filter(c => c !== card);
 
-        //  Reposition remaining hand cards
         this.handCards.forEach((c, index) => {
+            const newX = CONFIG.scene.width * 0.1 + index * 220;
+            const newY = CONFIG.scene.height * 0.80;
+
+            //  update snapBack position
+            c.startX = newX;
+            c.startY = newY;
+
             this.tweens.add({
                 targets: c,
-                x: CONFIG.scene.width * 0.1 + index * 220,
+                x: newX,
+                y: newY,
                 duration: 200,
                 ease: 'Power1'
             });
