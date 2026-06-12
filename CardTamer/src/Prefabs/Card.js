@@ -17,10 +17,11 @@ class Card extends Phaser.GameObjects.Container {
             -(CONFIG.card.height / 2) +26,
             this.cardName,
             {
-                fontSize: '24px',
-                color: '#000000',
-                stroke: '#ffffff',
-                strokeThickness: 0.5
+                fontFamily: 'monospace',
+                fontSize: '22px',
+                color: '#fff',
+                stroke: '#000',
+                strokeThickness: 5
             }
         ).setOrigin(0.5);
 

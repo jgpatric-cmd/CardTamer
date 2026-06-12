@@ -12,7 +12,7 @@ class MonsterCard extends Card {
         //===============================================//
         //  SPRITE WINDOW                                //
         //===============================================//
-        const windowY = -15;
+        const windowY = -45;
 
         //  Background inside the window
         this.cardBg = scene.add.image(0, windowY - 13, "cardBackground").setDisplaySize(
@@ -53,10 +53,11 @@ class MonsterCard extends Card {
         this.healthText = scene.add.text(-halfWindow, badgeY,
             `${monsterData.health}`,
             {
-                fontSize: '14px',
-                color: '#000000',
+                fontFamily: 'monospace',
+                fontSize: '18px',
+                color: '#fff',
                 stroke: '#00000',
-                strokeThickness: 1
+                strokeThickness: 4
             }
         ).setOrigin(0.5);
 
@@ -68,10 +69,11 @@ class MonsterCard extends Card {
         //  Speed Badge Text
         this.speedText = scene.add.text(halfWindow, badgeY, `${monsterData.speed}`,
             {
-                fontSize: '14px',
-                color: '#000000',
+                fontFamily: 'monospace',
+                fontSize: '18px',
+                color: '#fff',
                 stroke: '#00000',
-                strokeThickness: 1
+                strokeThickness: 4
             }
         ).setOrigin(0.5);
 
@@ -106,7 +108,7 @@ class MonsterCard extends Card {
 
     createMoveButtons(moves) {
         //  Start just under the sprite window
-        const startY = 100;
+        const startY = 50;
         const spacing = CONFIG.cardParts.moveFrame.height + 5;
 
         moves.forEach((move, index) => {
@@ -128,10 +130,11 @@ class MonsterCard extends Card {
                 y,
                 moveData.name,
                 {
+                    fontFamily: 'monospace',
                     fontSize: '18px',
-                    color: '#000000',
-                    stroke: '#ffffff',
-                    strokeThickness: 2
+                    color: '#ffff',
+                    stroke: '#000',
+                    strokeThickness: 4
                 }
             ).setOrigin(0.5);
 
@@ -141,8 +144,11 @@ class MonsterCard extends Card {
                 y,
                 move.uses === Infinity ? 'Inf' : `${move.uses}`,
                 {
-                    fontSize: '14px',
-                    color: '#000000'
+                    fontFamily: 'monospace',
+                    fontSize: '18px',
+                    color: '#fff',
+                    stroke: '#000',
+                    strokeThickness: 4
                 }
             ).setOrigin(0.5);
             //  Hover Effects
