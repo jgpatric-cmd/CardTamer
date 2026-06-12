@@ -126,17 +126,17 @@ class MonsterCard extends Card {
 
             //  Button Label
             const label = this.scene.add.text(
-                -CONFIG.cardParts.moveFrame.width / 5 + 18,
-                y,
-                moveData.name,
+                -CONFIG.cardParts.moveFrame.width / 2 + 13,
+                y - 10,
+                `${moveData.name} (${moveData.power})`,
                 {
                     fontFamily: 'monospace',
-                    fontSize: '18px',
-                    color: '#ffff',
+                    fontSize: '14px',
+                    color: '#fff',
                     stroke: '#000',
                     strokeThickness: 4
                 }
-            ).setOrigin(0.5);
+            ).setOrigin(0);
 
             //  Uses label
             const usesLabel = this.scene.add.text(
@@ -175,6 +175,8 @@ class MonsterCard extends Card {
         if (!btn) return;
 
         const move = this.monsterData.moves.find(m => m.id === moveID);
+        if (!move) return;
+
         const uses = move.uses === Infinity ? 'Inf' : move.uses;
         btn.usesLabel.setText(`${uses}`);
 

@@ -34,14 +34,16 @@ class BattleScene extends Phaser.Scene {
     }
 
     create() {
-        //  Set up the battle logic
+        //  Create fresh battle using the player's current deck
+        //  and the enemy deck for the current level
         this.machine = new MonsterMachine();
-        //  READD MONSTERS HERE
+
         this.machine.setupBattle(
             PLAYER_STATE.deck,
             PLAYER_STATE.getCurrentEnemyDeck()
         );
 
+        //  State flags
         this.busy = false;
         this.waitingForMonster = false;     //  Player must player a new monster
 
@@ -270,7 +272,10 @@ class BattleScene extends Phaser.Scene {
     //================================================//
 
     playMonsterCard(card) {
-        //  To swap monster out before it dies
+        //  If the player already has an active monster
+        //  playing another monster on top will "swap" the current one with the dragged one
+        //  Old monster is returned to the deck
+        //  Enemy takes turn as normal (player turn is used to swap)
         const isSwap = this.activePlayerCard && !this.waitingForMonster;
 
         if (isSwap) {
@@ -329,6 +334,7 @@ class BattleScene extends Phaser.Scene {
 
         this.busy = true;
 
+        //  MonsterMachine handles damage calculation and move uses
         const result = this.machine.executeMove("player", moveID);
 
         if (!result.success) {
@@ -336,6 +342,9 @@ class BattleScene extends Phaser.Scene {
             this.busy = false;
             return;
         }
+
+        //  Update the move uses counter
+        card.updateMoveButton(moveID);
 
         this.setStatus(`${result.attacker} used ${result.moveName} for ${result.damage} damage!`);
 
@@ -376,6 +385,7 @@ class BattleScene extends Phaser.Scene {
             return;
         }
 
+        //  Get valid move then execute it
         const moveID = this.machine.getEnemyMove();
         const result = this.machine.executeMove("enemy", moveID);
 
@@ -385,14 +395,10 @@ class BattleScene extends Phaser.Scene {
             return;
         }
 
-        //  TESTS
-        // console.log("result: ", result);
-        // console.log("playerMonster after attack: ", this.machine.playerMonster);
-        // console.log("health: ", this.machine.playerMonster.health);
-        // console.log("maxHealth: ", this.machine.playerMonster.maxHealth);
-
+        //  Text
         this.setStatus(`${result.attacker} used ${result.moveName} for ${result.damage} damage!`);
 
+        //  FX + update UI
         this.activePlayerCard.flashDamage();
         this.sound.play("hitSFX");
         this.activePlayerCard.updateHealth(
@@ -436,6 +442,9 @@ class BattleScene extends Phaser.Scene {
         
         //  Calculate catch chance
         const enemy = this.machine.enemyMonster;
+
+        //  Catch chance based on enemy's remaining health
+        //  Every 10% remaining health REDUCES the catch chance by 10%
         const healthPercent = enemy.health / enemy.maxHealth;
 
         //  Round up to the nearest 10% and sub from 100%
@@ -452,7 +461,14 @@ class BattleScene extends Phaser.Scene {
 
             //  Play faint animation then go on
             this.activeEnemyCard.playFaintAnimation(() => {
-                this.time.delayedCall (800, () => this.endBattle("player"));
+                //  No enemy monsters left
+                if (this.machine.enemyDeck.length === 0) {
+                    this.time.delayedCall (800, () => this.endBattle("player"));
+                }
+                else {
+                    this.enemyPlayNext();
+                    this.startNextTurn(false);
+                }
             });
         }
         else {
@@ -492,14 +508,15 @@ class BattleScene extends Phaser.Scene {
     //================================================//
 
     enemyPlayNext() {
-        this.activeEnemyCard.destroy();
-
         const nextMonster = this.machine.enemyPlayNextMonster();
+
         this.activeEnemyCard = new MonsterCard(
             this, 
             CONFIG.scene.width * 0.65, 
             CONFIG.scene.height * 0.35, 
-            nextMonster);
+            nextMonster
+        );
+
         this.activeEnemyCard.setActiveState();
 
         this.setStatus(`Opponent played ${nextMonster.name}!`);
@@ -510,6 +527,8 @@ class BattleScene extends Phaser.Scene {
     //================================================//
 
     endBattle(winner) {
+        //  Winning grants food and advances to next level
+        //  Losing resets run and returns player to the menu
         this.busy = true;
 
         const message = winner === "player" ? "You Win!" : "You Lose!";
@@ -592,7 +611,7 @@ class BattleScene extends Phaser.Scene {
             this.add.text(
                 CONFIG.scene.width / 2,
                 CONFIG.scene.height * 0.55,
-                `You reach level ${PLAYER_STATE.currentLevel + 1}`,
+                `You reached level ${PLAYER_STATE.currentLevel + 1}`,
                 { fontSize: '28px', color: '#aaaaaa' }
             ).setOrigin(0.5);
 
@@ -613,10 +632,9 @@ class BattleScene extends Phaser.Scene {
     }
 
     playNextTrack() {
-        const trackKey = this.musicTracks[this.currentTrackIndex];
+        //  Cycles through the dungeon tracks indefinitely
 
-        //  CHECK
-        console.log(`Now playing: ${trackKey}`);
+        const trackKey = this.musicTracks[this.currentTrackIndex];
 
         this.currentMusic = this.sound.add(trackKey, {volume: 0.5 });
         this.currentMusic.play();
