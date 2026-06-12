@@ -124,7 +124,7 @@ class BattleScene extends Phaser.Scene {
     }
 
     createCatchButton() {
-        const x = CONFIG.scene.width * 0.90;
+        const x = CONFIG.scene.width * 0.9;
         const y = CONFIG.scene.height * 0.65;
 
         //  Button bg
